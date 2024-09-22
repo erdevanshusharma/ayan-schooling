@@ -39,9 +39,9 @@ const MathPage = () => {
     Array(mathQuestions.length).fill(false)
   );
 
-  const handleAnswerChange = (questionIndex: number, answer: string) => {
+  const handleAnswerChange = (questionIndex: number, answerIndex: string) => {
     const newAnswers = [...answers];
-    newAnswers[questionIndex] = answer;
+    newAnswers[questionIndex] = +answerIndex;
     setAnswers(newAnswers);
   };
 
@@ -65,7 +65,7 @@ const MathPage = () => {
           <CardContent>
             <p className="text-lg mb-4">{question.question}</p>
             <RadioGroup
-              value={answers[questionIndex]}
+              value={answers[questionIndex]?.toString()}
               onValueChange={(value: string) =>
                 handleAnswerChange(questionIndex, value)
               }

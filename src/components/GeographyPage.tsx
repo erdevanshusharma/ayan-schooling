@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
+import { FaMap } from "react-icons/fa6";
 
 interface GeographyData {
   question: string;
@@ -45,9 +46,10 @@ const GeographyPage = () => {
     return <div>Loading...</div>;
   }
 
-  const handleAnswerChange = (questionIndex: number, answer: string) => {
+  const handleAnswerChange = (questionIndex: number, answerIndex: string) => {
     const newAnswers = [...answers];
-    newAnswers[questionIndex] = answer;
+
+    newAnswers[questionIndex] = +answerIndex;
     setAnswers(newAnswers);
   };
 
@@ -72,7 +74,7 @@ const GeographyPage = () => {
           <CardContent>
             <p className="text-lg mb-4">{question.question}</p>
             <RadioGroup
-              value={answers[questionIndex]}
+              value={answers[questionIndex]?.toString()}
               onValueChange={(value: string) =>
                 handleAnswerChange(questionIndex, value)
               }
@@ -123,17 +125,15 @@ const GeographyPage = () => {
                 <p className="text-gray-700 mt-2 whitespace-pre-line">
                   {question.explanation}
                 </p>
-                <div className="mt-4 aspect-video w-full">
-                  <iframe
-                    width="100%"
-                    height="100%"
-                    frameBorder="0"
-                    style={{ border: 0 }}
-                    src={`https://www.google.com/maps/embed/v1/search?key=AIzaSyBMvNGHJrJk_8XaREu_pT4eLZqYHCSYYGg&q=${encodeURIComponent(
-                      question.location
-                    )}&maptype=satellite`}
-                    allowFullScreen
-                  ></iframe>
+                <div className="mt-4">
+                  <a
+                    className="text-blue-600 flex gap-2 items-center"
+                    href={`http://maps.google.com/?t=k&q="${question.location}"`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <FaMap /> Explore {question.location}
+                  </a>
                 </div>
               </motion.div>
             )}
