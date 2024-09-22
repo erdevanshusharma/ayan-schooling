@@ -18,7 +18,7 @@ const MathPage = () => {
   useEffect(() => {
     const fetchGistData = async () => {
       const response = await fetch(
-        "https://gist.githubusercontent.com/erdevanshusharma/104ae6bc9843f34512d0b1f559e7c582/raw/ebb82cc88d9570d4dc9467962ef546a66ec05858/mathsQuestions.json"
+        "https://gist.githubusercontent.com/erdevanshusharma/104ae6bc9843f34512d0b1f559e7c582/raw/mathsQuestions.json"
       );
 
       if (!response.ok) {
@@ -26,7 +26,7 @@ const MathPage = () => {
       }
 
       const result = await response.json();
-      setMathQuestions(result);
+      setMathQuestions(result.data);
     };
 
     fetchGistData();

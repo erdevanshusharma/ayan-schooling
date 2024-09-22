@@ -21,7 +21,7 @@ const GeographyPage = () => {
   useEffect(() => {
     const fetchGistData = async () => {
       const response = await fetch(
-        "https://gist.githubusercontent.com/erdevanshusharma/84c09f63952963e9e7bb2d24c91b2e63/raw/39d846e08f96ec4b184d76cbb90896a6408548b5/geographyQuestions.json"
+        "https://gist.githubusercontent.com/erdevanshusharma/84c09f63952963e9e7bb2d24c91b2e63/raw/geographyQuestions.json"
       );
 
       if (!response.ok) {
@@ -29,7 +29,7 @@ const GeographyPage = () => {
       }
 
       const result = await response.json();
-      setGeographyQuestions(result);
+      setGeographyQuestions(result.data);
     };
 
     fetchGistData();

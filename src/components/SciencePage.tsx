@@ -20,7 +20,7 @@ const SciencePage = () => {
   useEffect(() => {
     const fetchGistData = async () => {
       const response = await fetch(
-        "https://gist.githubusercontent.com/erdevanshusharma/9e12748907fd91ce25a4d2fd23963e49/raw/3f6cb96b2cd5d2dffefccdba14ba75b1c87ff78c/scienceQuestions.json"
+        "https://gist.githubusercontent.com/erdevanshusharma/9e12748907fd91ce25a4d2fd23963e49/raw/scienceQuestions.json"
       );
 
       if (!response.ok) {
@@ -28,7 +28,7 @@ const SciencePage = () => {
       }
 
       const result = await response.json();
-      setScienceQuestions(result);
+      setScienceQuestions(result.data);
     };
 
     fetchGistData();
