@@ -116,7 +116,7 @@ const SciencePage = () => {
                     : "Not quite right. Try again!"}
                 </p>
                 <p
-                  className="text-gray-700 mt-2"
+                  className="text-gray-700 mt-2 whitespace-pre-line"
                   dangerouslySetInnerHTML={{
                     __html: question.explanation.replace(
                       /\*\*(.*?)\*\*/g,

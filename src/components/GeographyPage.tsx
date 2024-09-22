@@ -4,6 +4,7 @@ import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import { FaMap } from "react-icons/fa6";
+import { FaYoutube } from "react-icons/fa";
 
 interface GeographyData {
   question: string;
@@ -122,10 +123,16 @@ const GeographyPage = () => {
                     ? "Correct!"
                     : "Not quite right. Try again!"}
                 </p>
-                <p className="text-gray-700 mt-2 whitespace-pre-line">
-                  {question.explanation}
-                </p>
-                <div className="mt-4">
+                <p
+                  className="text-gray-700 mt-2 whitespace-pre-line"
+                  dangerouslySetInnerHTML={{
+                    __html: question.explanation.replace(
+                      /\*\*(.*?)\*\*/g,
+                      "<strong>$1</strong>"
+                    ),
+                  }}
+                ></p>
+                <div className="mt-4 flex flex-col gap-2">
                   <a
                     className="text-blue-600 flex gap-2 items-center"
                     href={`http://maps.google.com/?t=k&q="${question.location}"`}
@@ -133,6 +140,16 @@ const GeographyPage = () => {
                     rel="noreferrer"
                   >
                     <FaMap /> Explore {question.location}
+                  </a>
+                  <a
+                    className="text-red-600 flex gap-2 items-center"
+                    href={`https://www.youtube.com/results?search_query=${
+                      question.question
+                    } ${question.options[question.correctAnswer]}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <FaYoutube /> Look up on Youtube
                   </a>
                 </div>
               </motion.div>
