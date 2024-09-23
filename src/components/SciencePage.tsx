@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
+import ReactMarkdown from "react-markdown";
 
 interface ScienceData {
   question: string;
@@ -19,9 +20,10 @@ const SciencePage = () => {
 
   useEffect(() => {
     const fetchGistData = async () => {
-      const response = await fetch(
-        "https://gist.githubusercontent.com/erdevanshusharma/9e12748907fd91ce25a4d2fd23963e49/raw/scienceQuestions.json"
-      );
+      const rawUrl =
+        "https://gist.githubusercontent.com/erdevanshusharma/9e12748907fd91ce25a4d2fd23963e49/raw/scienceQuestions.json";
+      const cacheBustedUrl = `${rawUrl}?t=${new Date().getTime()}`;
+      const response = await fetch(cacheBustedUrl);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -115,15 +117,9 @@ const SciencePage = () => {
                     ? "Correct!"
                     : "Not quite right. Try again!"}
                 </p>
-                <p
-                  className="text-gray-700 mt-2 whitespace-pre-line"
-                  dangerouslySetInnerHTML={{
-                    __html: question.explanation.replace(
-                      /\*\*(.*?)\*\*/g,
-                      "<strong>$1</strong>"
-                    ),
-                  }}
-                ></p>
+                <div className="text-gray-700 mt-2 prose">
+                  <ReactMarkdown>{question.explanation}</ReactMarkdown>
+                </div>
                 <p className="text-blue-600 mt-2 italic">
                   {question.ponderingThought}
                 </p>

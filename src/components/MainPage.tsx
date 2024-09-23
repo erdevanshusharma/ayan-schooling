@@ -5,8 +5,9 @@ import MathPage from "./MathPage";
 import SciencePage from "./SciencePage";
 import GeographyPage from "./GeographyPage";
 import { useLocation, useNavigate } from "react-router-dom";
+import EnglishGrammarPage from "./EnglishGrammarPage";
 
-type TabValue = "math" | "science" | "geography";
+type TabValue = "math" | "science" | "geography" | "englishGrammar";
 
 const MainPage = () => {
   const navigate = useNavigate();
@@ -47,7 +48,7 @@ const MainPage = () => {
         onValueChange={(tab) => handleTabChange(tab as TabValue)}
         className="w-full max-w-4xl mx-auto"
       >
-        <TabsList className="grid w-full grid-cols-3 rounded-xl bg-white/20 p-1">
+        <TabsList className="grid w-full grid-cols-4 rounded-xl bg-white/20 p-1">
           <TabsTrigger
             value="math"
             className="rounded-lg text-white hover:bg-white/10 data-[state=active]:bg-white/30"
@@ -66,6 +67,12 @@ const MainPage = () => {
           >
             Geography
           </TabsTrigger>
+          <TabsTrigger
+            value="englishGrammar"
+            className="rounded-lg text-white hover:bg-white/10 data-[state=active]:bg-white/30"
+          >
+            English Grammar
+          </TabsTrigger>
         </TabsList>
         <motion.div
           key={activeTab}
@@ -82,6 +89,9 @@ const MainPage = () => {
           </TabsContent>
           <TabsContent value="geography">
             <GeographyPage />
+          </TabsContent>
+          <TabsContent value="englishGrammar">
+            <EnglishGrammarPage />
           </TabsContent>
         </motion.div>
       </Tabs>

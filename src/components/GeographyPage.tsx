@@ -5,6 +5,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import { FaMap } from "react-icons/fa6";
 import { FaYoutube } from "react-icons/fa";
+import ReactMarkdown from "react-markdown";
 
 interface GeographyData {
   question: string;
@@ -21,9 +22,10 @@ const GeographyPage = () => {
 
   useEffect(() => {
     const fetchGistData = async () => {
-      const response = await fetch(
-        "https://gist.githubusercontent.com/erdevanshusharma/84c09f63952963e9e7bb2d24c91b2e63/raw/geographyQuestions.json"
-      );
+      const rawUrl =
+        "https://gist.githubusercontent.com/erdevanshusharma/84c09f63952963e9e7bb2d24c91b2e63/raw/geographyQuestions.json";
+      const cacheBustedUrl = `${rawUrl}?t=${new Date().getTime()}`;
+      const response = await fetch(cacheBustedUrl);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -123,15 +125,9 @@ const GeographyPage = () => {
                     ? "Correct!"
                     : "Not quite right. Try again!"}
                 </p>
-                <p
-                  className="text-gray-700 mt-2 whitespace-pre-line"
-                  dangerouslySetInnerHTML={{
-                    __html: question.explanation.replace(
-                      /\*\*(.*?)\*\*/g,
-                      "<strong>$1</strong>"
-                    ),
-                  }}
-                ></p>
+                <div className="text-gray-700 mt-2 prose">
+                  <ReactMarkdown>{question.explanation}</ReactMarkdown>
+                </div>
                 <div className="mt-4 flex flex-col gap-2">
                   <a
                     className="text-blue-600 flex gap-2 items-center"
