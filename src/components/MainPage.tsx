@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import MathPage from "./MathPage";
-import SciencePage from "./SciencePage";
 import GeographyPage from "./GeographyPage";
 import { useLocation, useNavigate } from "react-router-dom";
-import EnglishGrammarPage from "./EnglishGrammarPage";
+import SimpleQuestionAnswerView from "./SimpleQuestionAnswerView";
 
 type TabValue = "math" | "science" | "geography" | "englishGrammar";
 
@@ -71,7 +69,7 @@ const MainPage = () => {
             value="englishGrammar"
             className="rounded-lg text-white hover:bg-white/10 data-[state=active]:bg-white/30"
           >
-            English Grammar
+            English
           </TabsTrigger>
         </TabsList>
         <motion.div
@@ -82,16 +80,31 @@ const MainPage = () => {
           transition={{ duration: 0.3 }}
         >
           <TabsContent value="math">
-            <MathPage />
+            <SimpleQuestionAnswerView
+              dataUrl={
+                "https://gist.githubusercontent.com/erdevanshusharma/104ae6bc9843f34512d0b1f559e7c582/raw/mathsQuestions.json"
+              }
+              title={"Maths Challenge"}
+            />
           </TabsContent>
           <TabsContent value="science">
-            <SciencePage />
+            <SimpleQuestionAnswerView
+              dataUrl={
+                "https://gist.githubusercontent.com/erdevanshusharma/9e12748907fd91ce25a4d2fd23963e49/raw/scienceQuestions.json"
+              }
+              title={"Science Challenge"}
+            />
           </TabsContent>
           <TabsContent value="geography">
             <GeographyPage />
           </TabsContent>
           <TabsContent value="englishGrammar">
-            <EnglishGrammarPage />
+            <SimpleQuestionAnswerView
+              dataUrl={
+                "https://gist.githubusercontent.com/erdevanshusharma/32f73472dc5793a88a0c69eb449b791d/raw/englishGrammarQuestions.json"
+              }
+              title={"English Grammar Challenge"}
+            />
           </TabsContent>
         </motion.div>
       </Tabs>

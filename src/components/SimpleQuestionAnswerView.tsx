@@ -5,7 +5,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import ReactMarkdown from "react-markdown";
 
-interface MathData {
+interface SimpleQuestionAnswerData {
   question: string;
   options: string[];
   correctAnswer: number;
@@ -13,14 +13,20 @@ interface MathData {
   explanation: string;
 }
 
-const MathPage = () => {
-  const [mathQuestions, setMathQuestions] = useState<MathData[]>([]);
+const SimpleQuestionAnswerView = ({
+  title,
+  dataUrl,
+}: {
+  title: string;
+  dataUrl: string;
+}) => {
+  const [simpleQuestions, setSimpleQuestions] = useState<
+    SimpleQuestionAnswerData[]
+  >([]);
 
   useEffect(() => {
     const fetchGistData = async () => {
-      const rawUrl =
-        "https://gist.githubusercontent.com/erdevanshusharma/104ae6bc9843f34512d0b1f559e7c582/raw/mathsQuestions.json";
-      const cacheBustedUrl = `${rawUrl}?t=${new Date().getTime()}`;
+      const cacheBustedUrl = `${dataUrl}?t=${new Date().getTime()}`;
       const response = await fetch(cacheBustedUrl);
 
       if (!response.ok) {
@@ -28,17 +34,17 @@ const MathPage = () => {
       }
 
       const result = await response.json();
-      setMathQuestions(result.data);
+      setSimpleQuestions(result.data);
     };
 
     fetchGistData();
-  }, []);
+  }, [dataUrl]);
 
   const [answers, setAnswers] = useState(
-    Array(mathQuestions.length).fill(null)
+    Array(simpleQuestions.length).fill(null)
   );
   const [showExplanations, setShowExplanations] = useState(
-    Array(mathQuestions.length).fill(false)
+    Array(simpleQuestions.length).fill(false)
   );
 
   const handleAnswerChange = (questionIndex: number, answerIndex: string) => {
@@ -55,8 +61,8 @@ const MathPage = () => {
 
   return (
     <div className="w-full max-w-4xl mx-auto p-4">
-      <h1 className="text-3xl font-bold text-center mb-6">Math Challenge</h1>
-      {mathQuestions.map((question, questionIndex) => (
+      <h1 className="text-3xl font-bold text-center mb-6">{title}</h1>
+      {simpleQuestions.map((question, questionIndex) => (
         <Card key={questionIndex} className="mb-8 bg-white/90 shadow-xl">
           <CardHeader>
             <h2 className="text-xl font-semibold text-purple-700">{`Question ${
@@ -127,4 +133,4 @@ const MathPage = () => {
   );
 };
 
-export default MathPage;
+export default SimpleQuestionAnswerView;
