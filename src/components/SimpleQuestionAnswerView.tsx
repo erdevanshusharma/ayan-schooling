@@ -75,7 +75,7 @@ const SimpleQuestionAnswerView = ({
               </p>
               {question.conceptShortDefinition && (
                 <p className="text-sm text-gray-500">
-                  : {question.conceptShortDefinition}
+                  - {question.conceptShortDefinition}
                 </p>
               )}
             </div>
@@ -91,7 +91,7 @@ const SimpleQuestionAnswerView = ({
               {question.options.map((option, optionIndex) => (
                 <div
                   key={optionIndex}
-                  className="flex items-center space-x-2 mb-2"
+                  className="flex items-center space-x-2 mb-1 px-4 py-4 bg-gradient-to-r from-purple-200 rounded-full"
                 >
                   <RadioGroupItem
                     value={optionIndex.toString()}
@@ -100,7 +100,7 @@ const SimpleQuestionAnswerView = ({
                   />
                   <label
                     htmlFor={`q${questionIndex}-option-${optionIndex}`}
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    className="text-lg w-full font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-7"
                   >
                     {option}
                   </label>
