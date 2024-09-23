@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import ReactMarkdown from "react-markdown";
+import MarkdownWithLinks from "./MarkdownWithLinks";
 
 interface SimpleQuestionAnswerData {
   question: string;
@@ -123,7 +124,7 @@ const SimpleQuestionAnswerView = ({
                     : "Not quite right. Try again!"}
                 </p>
                 <div className="text-gray-700 mt-2 prose">
-                  <ReactMarkdown>{question.explanation}</ReactMarkdown>
+                  <MarkdownWithLinks content={question.explanation} />
                 </div>
               </motion.div>
             )}
