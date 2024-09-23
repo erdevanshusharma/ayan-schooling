@@ -10,6 +10,7 @@ interface SimpleQuestionAnswerData {
   options: string[];
   correctAnswer: number;
   concept: string;
+  conceptShortDefinition: string;
   explanation: string;
 }
 
@@ -68,7 +69,16 @@ const SimpleQuestionAnswerView = ({
             <h2 className="text-xl font-semibold text-purple-700">{`Question ${
               questionIndex + 1
             }`}</h2>
-            <p className="text-sm text-gray-500">Concept: {question.concept}</p>
+            <div className="flex flex-row gap-1">
+              <p className="text-sm text-gray-500">
+                Concept: {question.concept}
+              </p>
+              {question.conceptShortDefinition && (
+                <p className="text-sm text-gray-500">
+                  : {question.conceptShortDefinition}
+                </p>
+              )}
+            </div>
           </CardHeader>
           <CardContent>
             <p className="text-lg mb-4">{question.question}</p>
