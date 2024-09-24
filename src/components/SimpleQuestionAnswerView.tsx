@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import ReactMarkdown from "react-markdown";
 import MarkdownWithLinks from "./MarkdownWithLinks";
 
 interface SimpleQuestionAnswerData {
@@ -67,13 +66,13 @@ const SimpleQuestionAnswerView = ({
             <h2 className="text-xl font-semibold text-purple-700">{`Question ${
               questionIndex + 1
             }`}</h2>
-            <div className="flex flex-row gap-1">
+            <div className="flex flex-col gap-1">
               <p className="text-sm text-gray-500">
                 Concept: {question.concept}
               </p>
               {question.conceptShortDefinition && (
                 <p className="text-sm text-gray-500">
-                  - {question.conceptShortDefinition}
+                  {question.conceptShortDefinition}
                 </p>
               )}
             </div>

@@ -4,7 +4,12 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useLocation, useNavigate } from "react-router-dom";
 import SimpleQuestionAnswerView from "./SimpleQuestionAnswerView";
 
-type TabValue = "math" | "science" | "geography" | "englishGrammar";
+type TabValue =
+  | "math"
+  | "science"
+  | "geography"
+  | "englishGrammar"
+  | "bigPicture";
 
 interface ISubjectConfig {
   tabName: string;
@@ -36,6 +41,12 @@ const subjectConfig: ISubjectConfig[] = [
     dataUrl:
       "https://gist.githubusercontent.com/erdevanshusharma/32f73472dc5793a88a0c69eb449b791d/raw/englishGrammarQuestions.json",
     title: "English Grammar Challenge",
+  },
+  {
+    tabName: "Big Picture",
+    dataUrl:
+      "https://gist.githubusercontent.com/erdevanshusharma/56a206859b9138a9d71d2420cbebe738/raw/bigPicture.json",
+    title: "Big Picture Challenge",
   },
 ];
 
@@ -78,7 +89,9 @@ const MainPage = () => {
         onValueChange={(tab) => handleTabChange(tab as TabValue)}
         className="w-full max-w-4xl mx-auto"
       >
-        <TabsList className="grid w-full grid-cols-4 rounded-xl bg-white/20 p-1">
+        <TabsList
+          className={`grid w-full grid-cols-5 rounded-xl bg-white/20 p-1`}
+        >
           {subjectConfig.map((config) => (
             <TabsTrigger
               value={config.tabName}
