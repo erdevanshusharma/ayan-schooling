@@ -97,7 +97,7 @@ const SimpleQuestionAnswerView = ({
                   />
                   <label
                     htmlFor={`q${questionIndex}-option-${optionIndex}`}
-                    className="text-lg w-full font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-7"
+                    className="text-sm w-full font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-7"
                   >
                     {option}
                   </label>
@@ -111,7 +111,7 @@ const SimpleQuestionAnswerView = ({
                 transition={{ duration: 0.5 }}
                 className="mt-4"
               >
-                <p
+                {/* <p
                   className={`font-bold ${
                     answers[questionIndex] === question.correctAnswer
                       ? "text-green-600"
@@ -121,6 +121,9 @@ const SimpleQuestionAnswerView = ({
                   {answers[questionIndex] === question.correctAnswer
                     ? "Correct!"
                     : "Not quite right. Try again!"}
+                </p> */}
+                <p className="font-bold text-purple-600">
+                  Did you get it right?
                 </p>
                 <div className="text-gray-700 mt-2 prose">
                   <MarkdownWithLinks content={question.explanation} />
