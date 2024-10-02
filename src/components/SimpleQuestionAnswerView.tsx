@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import MarkdownWithLinks from "./MarkdownWithLinks";
+import { Button } from "@/components/ui/button";
 
 interface SimpleQuestionAnswerData {
   question: string;
@@ -108,7 +109,7 @@ const SimpleQuestionAnswerView = ({
             </RadioGroup>
             <Button
               onClick={() => handleSubmit(questionIndex)}
-              className="mt-4 bg-purple-600 hover:bg-purple-700"
+              className="mt-4 bg-purple-600 hover:bg-purple-700 rounded-full"
             >
               Check Answer
             </Button>
