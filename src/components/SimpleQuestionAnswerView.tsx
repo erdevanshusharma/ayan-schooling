@@ -51,7 +51,9 @@ const SimpleQuestionAnswerView = ({
     const newAnswers = [...answers];
     newAnswers[questionIndex] = +answerIndex;
     setAnswers(newAnswers);
+  };
 
+  const handleSubmit = (questionIndex: number) => {
     const newShowExplanations = [...showExplanations];
     newShowExplanations[questionIndex] = true;
     setShowExplanations(newShowExplanations);
@@ -104,6 +106,12 @@ const SimpleQuestionAnswerView = ({
                 </div>
               ))}
             </RadioGroup>
+            <Button
+              onClick={() => handleSubmit(questionIndex)}
+              className="mt-4 bg-purple-600 hover:bg-purple-700"
+            >
+              Check Answer
+            </Button>
             {showExplanations[questionIndex] && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
