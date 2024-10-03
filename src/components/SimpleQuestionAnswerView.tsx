@@ -1,9 +1,25 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import MarkdownWithLinks from "./MarkdownWithLinks";
 import { Button } from "@/components/ui/button";
+
+const POINTS_PER_QUESTION = 10;
+
+const Score = ({
+  points,
+  numQuestions,
+}: {
+  points: number;
+  numQuestions: number;
+}) => {
+  return (
+    <div className="flex">
+      {points} / {POINTS_PER_QUESTION * numQuestions}
+    </div>
+  );
+};
 
 interface SimpleQuestionAnswerData {
   question: string;
@@ -24,6 +40,21 @@ const SimpleQuestionAnswerView = ({
   const [simpleQuestions, setSimpleQuestions] = useState<
     SimpleQuestionAnswerData[]
   >([]);
+
+  // Create an array of refs to store references to each card
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  const [totalPoints, setTotalPoints] = useState(0);
+  const [shouldToggleMap, setShouldToggleMap] = useState<{
+    [key: number]: boolean;
+  }>({});
+
+  const toggleValueForIndex = (key: number) => {
+    setShouldToggleMap((prevDict) => ({
+      ...prevDict, // Copy the existing dictionary
+      [key]: !prevDict[key], // Toggle the value of the specific key
+    }));
+  };
 
   useEffect(() => {
     const fetchGistData = async () => {
@@ -52,6 +83,14 @@ const SimpleQuestionAnswerView = ({
     const newAnswers = [...answers];
     newAnswers[questionIndex] = +answerIndex;
     setAnswers(newAnswers);
+
+    const nextCardRef = cardRefs.current[questionIndex + 1]; // Get reference to the next card
+    if (nextCardRef) {
+      nextCardRef.scrollIntoView({
+        behavior: "smooth", // Smooth scrolling
+        block: "start", // Align the next card to the top
+      });
+    }
   };
 
   const handleSubmit = (questionIndex: number) => {
@@ -62,9 +101,16 @@ const SimpleQuestionAnswerView = ({
 
   return (
     <div className="w-full max-w-4xl mx-auto p-4">
-      <h1 className="text-3xl font-bold text-center mb-6">{title}</h1>
+      <h1 className="text-3xl font-bold text-center mb-6 flex gap-2">
+        {title} -{" "}
+        {Score({ points: totalPoints, numQuestions: simpleQuestions.length })}
+      </h1>
       {simpleQuestions.map((question, questionIndex) => (
-        <Card key={questionIndex} className="mb-8 bg-white/90 shadow-xl">
+        <Card
+          key={questionIndex}
+          ref={(el) => (cardRefs.current[questionIndex] = el)} // Store reference to the current card
+          className="mb-8 bg-white/90 shadow-xl"
+        >
           <CardHeader>
             <h2 className="text-xl font-semibold text-purple-700">{`Question ${
               questionIndex + 1
@@ -107,12 +153,14 @@ const SimpleQuestionAnswerView = ({
                 </div>
               ))}
             </RadioGroup>
-            <Button
-              onClick={() => handleSubmit(questionIndex)}
-              className="mt-4 bg-purple-600 hover:bg-purple-700 rounded-full"
-            >
-              Check Answer
-            </Button>
+            {answers[questionIndex]?.toString() && (
+              <Button
+                onClick={() => handleSubmit(questionIndex)}
+                className="mt-4 bg-purple-600 hover:bg-purple-700 rounded-full"
+              >
+                Check Answer
+              </Button>
+            )}
             {showExplanations[questionIndex] && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -131,9 +179,39 @@ const SimpleQuestionAnswerView = ({
                     ? "Correct!"
                     : "Not quite right. Try again!"}
                 </p> */}
-                <p className="font-bold text-purple-600">
-                  Did you get it right?
-                </p>
+                <div className="flex flex-row justify-between">
+                  <p className="font-bold text-purple-600">
+                    Did you get it right?
+                  </p>
+                  <div className="flex gap-2 items-center">
+                    Score:
+                    {Score({
+                      points: totalPoints,
+                      numQuestions: simpleQuestions.length,
+                    })}
+                    {shouldToggleMap[questionIndex] === true ? (
+                      <Button
+                        onClick={() => {
+                          toggleValueForIndex(questionIndex);
+                          setTotalPoints(totalPoints - POINTS_PER_QUESTION);
+                        }}
+                        className="ml-2 bg-red-500 hover:bg-red-700 rounded-full"
+                      >
+                        Subtract {POINTS_PER_QUESTION}
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={() => {
+                          toggleValueForIndex(questionIndex);
+                          setTotalPoints(totalPoints + POINTS_PER_QUESTION);
+                        }}
+                        className="ml-2 bg-purple-600 hover:bg-purple-700 rounded-full"
+                      >
+                        Add {POINTS_PER_QUESTION}
+                      </Button>
+                    )}
+                  </div>
+                </div>
                 <div className="text-gray-700 mt-2 prose">
                   <MarkdownWithLinks content={question.explanation} />
                 </div>
