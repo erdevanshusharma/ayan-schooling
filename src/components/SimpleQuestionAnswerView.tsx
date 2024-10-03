@@ -197,7 +197,7 @@ const SimpleQuestionAnswerView = ({
                         }}
                         className="ml-2 bg-red-500 hover:bg-red-700 rounded-full"
                       >
-                        Subtract {POINTS_PER_QUESTION}
+                        Undo
                       </Button>
                     ) : (
                       <Button
