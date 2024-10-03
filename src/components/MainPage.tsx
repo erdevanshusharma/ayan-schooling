@@ -47,6 +47,12 @@ const subjectConfig: { [key: string]: ISubjectConfig } = {
     title: 'Ethics Challenge',
   },
 
+  space: {
+    dataUrl:
+      'https://gist.githubusercontent.com/erdevanshusharma/19a59404e47e9b8bd0d4172792a50bbc/raw/space.json',
+    title: 'Space Challenge',
+  },
+
   'Big Picture': {
     dataUrl:
       'https://gist.githubusercontent.com/erdevanshusharma/56a206859b9138a9d71d2420cbebe738/raw/bigPicture.json',
