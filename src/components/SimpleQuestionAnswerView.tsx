@@ -63,6 +63,7 @@ const SimpleQuestionAnswerView = ({ dataUrl }: { dataUrl: string }) => {
     '/ayan-schooling/sounds/mixkit-fast-transitions-swoosh-3115.wav',
   )
   const undoAddPointsSound = new Audio('/ayan-schooling/sounds/mixkit-money-bag-drop-1989.wav')
+  const winnerSound = new Audio('/ayan-schooling/sounds/winner.wav')
 
   const [answers, setAnswers] = useState(Array(simpleQuestions.length).fill(null))
   const [showExplanations, setShowExplanations] = useState(
@@ -186,9 +187,14 @@ const SimpleQuestionAnswerView = ({ dataUrl }: { dataUrl: string }) => {
                       <Button
                         onClick={() => {
                           toggleValueForIndex(questionIndex)
-                          setTotalPoints(totalPoints + POINTS_PER_QUESTION)
+                          const updatedPoints = totalPoints + POINTS_PER_QUESTION
+                          if (updatedPoints === simpleQuestions.length * POINTS_PER_QUESTION) {
+                            winnerSound.play()
+                          } else {
+                            addPointsSound.play()
+                          }
 
-                          addPointsSound.play()
+                          setTotalPoints(updatedPoints)
                         }}
                         className='ml-2 rounded-full bg-purple-600 hover:bg-purple-700'
                       >
