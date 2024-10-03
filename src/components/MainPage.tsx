@@ -1,10 +1,4 @@
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -64,18 +58,21 @@ const MainPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const [activeTab, setActiveTab] = useState('math')
+  const [activeConfig, setActiveConfig] = useState('math')
+  const [isOpen, setIsOpen] = useState(false) // State to control the dialog
 
-  const handleTabChange = (tab: TabValue) => {
-    setActiveTab(tab)
-    navigate(`?tab=${tab}`)
+  const handleTabChange = (configName: string) => {
+    setIsOpen(false) // Close the dialog when an option is clicked
+
+    setActiveConfig(configName)
+    navigate(`?tab=${configName}`)
   }
 
   useEffect(() => {
     const params = new URLSearchParams(location.search)
     const tab = params.get('tab') as TabValue | null
     if (tab) {
-      setActiveTab(tab)
+      setActiveConfig(tab)
     }
   }, [location])
 
@@ -84,7 +81,7 @@ const MainPage = () => {
     visible: { opacity: 1, y: 0 },
   }
 
-  const selectedConfig = subjectConfig[activeTab]
+  const selectedConfig = subjectConfig[activeConfig]
 
   return (
     <div className='flex min-h-screen flex-col items-center bg-gradient-to-br from-purple-400 via-pink-500 to-red-500 p-4 sm:p-8'>
@@ -96,24 +93,47 @@ const MainPage = () => {
       >
         Ayan's Learning Adventure
       </motion.h1>
-      <Select onValueChange={(tab) => handleTabChange(tab as TabValue)}>
-        <SelectTrigger className='w-fit rounded-full border-none bg-purple-400/50 px-20 py-8 text-3xl capitalize focus:border-none focus:outline-none focus:ring-0 focus:ring-offset-0'>
-          <SelectValue placeholder={selectedConfig.title} />
-        </SelectTrigger>
-        <SelectContent className='flex max-h-screen flex-col justify-center rounded-lg p-2'>
-          {Object.entries(subjectConfig).map(([tabName, config]) => (
-            <SelectItem
-              value={tabName}
-              key={tabName}
-              className='cursor-pointer items-center rounded-full px-12'
-            >
-              <p className='py-4 text-3xl capitalize'>{config.title}</p>
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        {/* Button that opens the dialog */}
+        <DialogTrigger asChild>
+          <button className='rounded-full bg-purple-600 px-10 py-4 text-white shadow-lg transition hover:bg-purple-700'>
+            <p className='text-xl capitalize'>{selectedConfig.title}</p>
+          </button>
+        </DialogTrigger>
+
+        {/* Dialog Content */}
+        <DialogContent className='flex h-full w-full items-center justify-center overflow-y-auto bg-purple-50 p-4 sm:max-h-full sm:max-w-full'>
+          {/* Motion component for animating the dialog */}
+          <motion.div
+            initial={{ opacity: 0, y: 100 }} // Start below screen
+            animate={{ opacity: 1, y: 0 }} // Animate into view
+            exit={{ opacity: 0, y: 100 }} // Animate out of view
+            transition={{ duration: 0.5 }} // Smooth transition
+            className='h-full w-full'
+          >
+            <div className='grid h-full w-full grid-cols-2 gap-10'>
+              {Object.entries(subjectConfig).map(([configName, config]) => (
+                <button
+                  key={configName}
+                  className='flex items-center justify-center rounded-full bg-purple-200 p-10 text-lg text-white hover:bg-purple-300'
+                  onClick={() => {
+                    handleTabChange(configName as TabValue)
+                  }}
+                  style={{
+                    backgroundImage: `url('/ayan-schooling/images/${configName}.jpg')`, // Image from the public folder
+                    backgroundSize: 'cover', // Ensure image covers the entire button
+                    backgroundPosition: 'center', // Center the background image
+                  }}
+                >
+                  <p className='py-4 text-5xl capitalize shadow-md'>{config.title}</p>
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        </DialogContent>
+      </Dialog>
       <motion.div
-        key={activeTab}
+        key={activeConfig}
         initial='hidden'
         animate='visible'
         variants={tabVariants}
