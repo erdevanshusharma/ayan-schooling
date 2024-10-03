@@ -58,13 +58,13 @@ const MainPage = () => {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const [activeConfig, setActiveConfig] = useState('math')
+  const [activeConfigName, setActiveConfigName] = useState('math')
   const [isOpen, setIsOpen] = useState(false) // State to control the dialog
 
   const handleTabChange = (configName: string) => {
     setIsOpen(false) // Close the dialog when an option is clicked
 
-    setActiveConfig(configName)
+    setActiveConfigName(configName)
     navigate(`?tab=${configName}`)
   }
 
@@ -72,7 +72,7 @@ const MainPage = () => {
     const params = new URLSearchParams(location.search)
     const tab = params.get('tab') as TabValue | null
     if (tab) {
-      setActiveConfig(tab)
+      setActiveConfigName(tab)
     }
   }, [location])
 
@@ -81,7 +81,7 @@ const MainPage = () => {
     visible: { opacity: 1, y: 0 },
   }
 
-  const selectedConfig = subjectConfig[activeConfig]
+  const selectedConfig = subjectConfig[activeConfigName]
 
   return (
     <div className='flex min-h-screen flex-col items-center bg-gradient-to-br from-purple-400 via-pink-500 to-red-500 p-4 sm:p-8'>
@@ -96,7 +96,14 @@ const MainPage = () => {
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         {/* Button that opens the dialog */}
         <DialogTrigger asChild>
-          <button className='rounded-full bg-purple-600 px-10 py-4 text-white shadow-lg transition hover:bg-purple-700'>
+          <button
+            className='rounded-full bg-purple-600 px-10 py-4 text-white shadow-lg transition hover:bg-purple-700'
+            style={{
+              backgroundImage: `url('/ayan-schooling/images/${activeConfigName}.jpg')`, // Image from the public folder
+              backgroundSize: 'cover', // Ensure image covers the entire button
+              backgroundPosition: 'center', // Center the background image
+            }}
+          >
             <p className='text-xl capitalize'>{selectedConfig.title}</p>
           </button>
         </DialogTrigger>
@@ -111,7 +118,7 @@ const MainPage = () => {
             transition={{ duration: 0.5 }} // Smooth transition
             className='h-full w-full'
           >
-            <div className='grid h-full w-full grid-cols-2 gap-10'>
+            <div className='grid h-full w-full grid-cols-1 gap-10 sm:grid-cols-3'>
               {Object.entries(subjectConfig).map(([configName, config]) => (
                 <button
                   key={configName}
@@ -133,7 +140,7 @@ const MainPage = () => {
         </DialogContent>
       </Dialog>
       <motion.div
-        key={activeConfig}
+        key={activeConfigName}
         initial='hidden'
         animate='visible'
         variants={tabVariants}
