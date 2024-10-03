@@ -72,6 +72,16 @@ const SimpleQuestionAnswerView = ({
     fetchGistData();
   }, [dataUrl]);
 
+  const addPointsSound = new Audio(
+    "/ayan-schooling/sounds/mixkit-achievement-bell-600.wav"
+  );
+  const moveToNextSound = new Audio(
+    "/ayan-schooling/sounds/mixkit-fast-transitions-swoosh-3115.wav"
+  );
+  const undoAddPointsSound = new Audio(
+    "/ayan-schooling/sounds/mixkit-money-bag-drop-1989.wav"
+  );
+
   const [answers, setAnswers] = useState(
     Array(simpleQuestions.length).fill(null)
   );
@@ -90,6 +100,7 @@ const SimpleQuestionAnswerView = ({
         behavior: "smooth", // Smooth scrolling
         block: "start", // Align the next card to the top
       });
+      moveToNextSound.play();
     }
   };
 
@@ -101,8 +112,8 @@ const SimpleQuestionAnswerView = ({
 
   return (
     <div className="w-full max-w-4xl mx-auto p-4">
-      <h1 className="text-3xl font-bold text-center mb-6 flex gap-2">
-        {title} -{" "}
+      <h1 className="text-3xl font-bold items-center mb-6 flex flex-col gap-2">
+        {title}
         {Score({ points: totalPoints, numQuestions: simpleQuestions.length })}
       </h1>
       {simpleQuestions.map((question, questionIndex) => (
@@ -153,14 +164,13 @@ const SimpleQuestionAnswerView = ({
                 </div>
               ))}
             </RadioGroup>
-            {answers[questionIndex]?.toString() && (
-              <Button
-                onClick={() => handleSubmit(questionIndex)}
-                className="mt-4 bg-purple-600 hover:bg-purple-700 rounded-full"
-              >
-                Check Answer
-              </Button>
-            )}
+            <Button
+              onClick={() => handleSubmit(questionIndex)}
+              className="mt-4 bg-purple-600 hover:bg-purple-700 rounded-full disabled:bg-gray-700 disabled:cursor-not-allowed"
+              disabled={answers[questionIndex]?.toString() === undefined}
+            >
+              Check Answer
+            </Button>
             {showExplanations[questionIndex] && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -194,6 +204,8 @@ const SimpleQuestionAnswerView = ({
                         onClick={() => {
                           toggleValueForIndex(questionIndex);
                           setTotalPoints(totalPoints - POINTS_PER_QUESTION);
+
+                          undoAddPointsSound.play();
                         }}
                         className="ml-2 bg-red-500 hover:bg-red-700 rounded-full"
                       >
@@ -204,6 +216,8 @@ const SimpleQuestionAnswerView = ({
                         onClick={() => {
                           toggleValueForIndex(questionIndex);
                           setTotalPoints(totalPoints + POINTS_PER_QUESTION);
+
+                          addPointsSound.play();
                         }}
                         className="ml-2 bg-purple-600 hover:bg-purple-700 rounded-full"
                       >

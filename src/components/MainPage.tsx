@@ -95,6 +95,7 @@ const MainPage = () => {
           {subjectConfig.map((config) => (
             <TabsTrigger
               value={config.tabName}
+              key={config.tabName}
               className="rounded-lg text-white hover:bg-white/10 data-[state=active]:bg-white/30"
             >
               <p className="capitalize">{config.tabName}</p>
