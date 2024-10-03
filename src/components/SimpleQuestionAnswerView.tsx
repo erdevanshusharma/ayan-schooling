@@ -114,7 +114,9 @@ const SimpleQuestionAnswerView = ({ dataUrl }: { dataUrl: string }) => {
             </div>
           </CardHeader>
           <CardContent>
-            <p className='mb-4 text-lg'>{question.question}</p>
+            <p className='mb-4 text-lg'>
+              <MarkdownWithLinks content={question.question} />
+            </p>
             <RadioGroup
               value={answers[questionIndex]?.toString()}
               onValueChange={(value: string) => handleAnswerChange(questionIndex, value)}
