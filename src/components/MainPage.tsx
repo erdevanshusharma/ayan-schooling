@@ -6,9 +6,10 @@ import SimpleQuestionAnswerView from './SimpleQuestionAnswerView'
 
 type TabValue = 'math' | 'science' | 'geography' | 'englishGrammar' | 'bigPicture'
 
-interface ISubjectConfig {
+export interface ISubjectConfig {
   dataUrl: string
   title: string
+  showConceptDetails?: boolean
 }
 
 const subjectConfig: { [key: string]: ISubjectConfig } = {
@@ -21,24 +22,34 @@ const subjectConfig: { [key: string]: ISubjectConfig } = {
     dataUrl:
       'https://gist.githubusercontent.com/erdevanshusharma/9e12748907fd91ce25a4d2fd23963e49/raw/scienceQuestions.json',
     title: 'Science Challenge',
+    showConceptDetails: true,
   },
 
   geography: {
     dataUrl:
       'https://gist.githubusercontent.com/erdevanshusharma/84c09f63952963e9e7bb2d24c91b2e63/raw/geographyQuestions.json',
     title: 'Geography Challenge',
+    showConceptDetails: true,
   },
 
   english: {
     dataUrl:
       'https://gist.githubusercontent.com/erdevanshusharma/32f73472dc5793a88a0c69eb449b791d/raw/englishGrammarQuestions.json',
     title: 'English Grammar Challenge',
+    showConceptDetails: true,
+  },
+
+  humanHistory: {
+    dataUrl:
+      'https://gist.githubusercontent.com/erdevanshusharma/1dc42bf7825e07b73a6c09329a248bf5/raw/humanHistory.json',
+    title: 'Human History Challenge',
   },
 
   ethics: {
     dataUrl:
       'https://gist.githubusercontent.com/erdevanshusharma/3e04a3e7e1085ce5c6b8d7f997f93422/raw/ethics.json',
     title: 'Ethics Challenge',
+    showConceptDetails: true,
   },
 
   space: {
@@ -132,7 +143,7 @@ const MainPage = () => {
                     backgroundPosition: 'center', // Center the background image
                   }}
                 >
-                  <p className='py-4 text-5xl capitalize shadow-md'>{config.title}</p>
+                  <p className='py-4 text-5xl capitalize'>{config.title}</p>
                 </button>
               ))}
             </div>
@@ -146,7 +157,7 @@ const MainPage = () => {
         variants={tabVariants}
         transition={{ duration: 0.3 }}
       >
-        <SimpleQuestionAnswerView dataUrl={selectedConfig.dataUrl} />
+        <SimpleQuestionAnswerView config={selectedConfig} />
       </motion.div>
     </div>
   )

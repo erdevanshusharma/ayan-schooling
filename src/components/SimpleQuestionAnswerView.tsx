@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { motion } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
+import { ISubjectConfig } from './MainPage'
 import MarkdownWithLinks from './MarkdownWithLinks'
 
 const POINTS_PER_QUESTION = 10
@@ -24,7 +25,7 @@ interface SimpleQuestionAnswerData {
   explanation: string
 }
 
-const SimpleQuestionAnswerView = ({ dataUrl }: { dataUrl: string }) => {
+const SimpleQuestionAnswerView = ({ config }: { config: ISubjectConfig }) => {
   const [simpleQuestions, setSimpleQuestions] = useState<SimpleQuestionAnswerData[]>([])
 
   // Create an array of refs to store references to each card
@@ -44,7 +45,7 @@ const SimpleQuestionAnswerView = ({ dataUrl }: { dataUrl: string }) => {
 
   useEffect(() => {
     const fetchGistData = async () => {
-      const cacheBustedUrl = `${dataUrl}?t=${new Date().getTime()}`
+      const cacheBustedUrl = `${config.dataUrl}?t=${new Date().getTime()}`
       const response = await fetch(cacheBustedUrl)
 
       if (!response.ok) {
@@ -56,7 +57,7 @@ const SimpleQuestionAnswerView = ({ dataUrl }: { dataUrl: string }) => {
     }
 
     fetchGistData()
-  }, [dataUrl])
+  }, [config.dataUrl])
 
   const addPointsSound = new Audio('/ayan-schooling/sounds/mixkit-achievement-bell-600.wav')
   const moveToNextSound = new Audio(
@@ -108,7 +109,7 @@ const SimpleQuestionAnswerView = ({ dataUrl }: { dataUrl: string }) => {
             }`}</h2>
             <div className='flex flex-col gap-1'>
               <p className='text-sm text-gray-500'>Concept: {question.concept}</p>
-              {question.conceptShortDefinition && (
+              {question.conceptShortDefinition && config.showConceptDetails && (
                 <p className='text-sm text-gray-500'>{question.conceptShortDefinition}</p>
               )}
             </div>
@@ -165,9 +166,9 @@ const SimpleQuestionAnswerView = ({ dataUrl }: { dataUrl: string }) => {
                     ? "Correct!"
                     : "Not quite right. Try again!"}
                 </p> */}
-                <div className='flex flex-row justify-between'>
+                <div className='flex flex-col justify-between gap-2'>
                   <p className='font-bold text-purple-600'>Did you get it right?</p>
-                  <div className='flex items-center gap-2'>
+                  <div className='mb-4 flex items-center gap-2'>
                     Score:
                     {Score({
                       points: totalPoints,
