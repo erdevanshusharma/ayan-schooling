@@ -31,13 +31,24 @@ const SimpleQuestionAnswerView = ({ config }: { config: ISubjectConfig }) => {
   // Create an array of refs to store references to each card
   const cardRefs = useRef<(HTMLDivElement | null)[]>([])
 
-  const [totalPoints, setTotalPoints] = useState(0)
-  const [shouldToggleMap, setShouldToggleMap] = useState<{
+  const [iKnewItPoints, setIKnewItPoints] = useState(0)
+  const [learnedSomethingNewPoints, setLearnedSomethingNewPoints] = useState(0)
+
+  const [shouldToggleIKnewItMap, setShouldToggleIKnewItMap] = useState<{
+    [key: number]: boolean
+  }>({})
+  const [shouldToggleLearnedSomethingNewMap, setShouldToggleLearnedSomethingNewMap] = useState<{
     [key: number]: boolean
   }>({})
 
-  const toggleValueForIndex = (key: number) => {
-    setShouldToggleMap((prevDict) => ({
+  const toggleIKnewItValueForIndex = (key: number) => {
+    setShouldToggleIKnewItMap((prevDict) => ({
+      ...prevDict, // Copy the existing dictionary
+      [key]: !prevDict[key], // Toggle the value of the specific key
+    }))
+  }
+  const toggleLearnedSomethingNewValueForIndex = (key: number) => {
+    setShouldToggleLearnedSomethingNewMap((prevDict) => ({
       ...prevDict, // Copy the existing dictionary
       [key]: !prevDict[key], // Toggle the value of the specific key
     }))
@@ -65,6 +76,7 @@ const SimpleQuestionAnswerView = ({ config }: { config: ISubjectConfig }) => {
   )
   const undoAddPointsSound = new Audio('/ayan-schooling/sounds/mixkit-money-bag-drop-1989.wav')
   const winnerSound = new Audio('/ayan-schooling/sounds/winner.wav')
+  const learnedNewSound = new Audio('/ayan-schooling/sounds/learnedNew.wav')
 
   const [answers, setAnswers] = useState(Array(simpleQuestions.length).fill(null))
   const [showExplanations, setShowExplanations] = useState(
@@ -95,7 +107,10 @@ const SimpleQuestionAnswerView = ({ config }: { config: ISubjectConfig }) => {
   return (
     <div className='mx-auto w-full max-w-4xl p-4'>
       <h1 className='mb-6 flex flex-col items-center gap-2 text-3xl font-bold'>
-        {Score({ points: totalPoints, numQuestions: simpleQuestions.length })}
+        {Score({
+          points: iKnewItPoints + learnedSomethingNewPoints,
+          numQuestions: simpleQuestions.length,
+        })}
       </h1>
       {simpleQuestions.map((question, questionIndex) => (
         <Card
@@ -169,16 +184,18 @@ const SimpleQuestionAnswerView = ({ config }: { config: ISubjectConfig }) => {
                 <div className='flex flex-col justify-between gap-2'>
                   <p className='font-bold text-purple-600'>Did you get it right?</p>
                   <div className='mb-4 flex items-center gap-2'>
-                    Score:
+                    Learned New Score:
                     {Score({
-                      points: totalPoints,
+                      points: learnedSomethingNewPoints,
                       numQuestions: simpleQuestions.length,
                     })}
-                    {shouldToggleMap[questionIndex] === true ? (
+                    {shouldToggleLearnedSomethingNewMap[questionIndex] ? (
                       <Button
                         onClick={() => {
-                          toggleValueForIndex(questionIndex)
-                          setTotalPoints(totalPoints - POINTS_PER_QUESTION)
+                          toggleLearnedSomethingNewValueForIndex(questionIndex)
+                          setLearnedSomethingNewPoints(
+                            learnedSomethingNewPoints - POINTS_PER_QUESTION,
+                          )
 
                           undoAddPointsSound.play()
                         }}
@@ -188,20 +205,61 @@ const SimpleQuestionAnswerView = ({ config }: { config: ISubjectConfig }) => {
                       </Button>
                     ) : (
                       <Button
+                        disabled={shouldToggleIKnewItMap[questionIndex]}
                         onClick={() => {
-                          toggleValueForIndex(questionIndex)
-                          const updatedPoints = totalPoints + POINTS_PER_QUESTION
-                          if (updatedPoints === simpleQuestions.length * POINTS_PER_QUESTION) {
+                          toggleLearnedSomethingNewValueForIndex(questionIndex)
+                          const updatedPoints = learnedSomethingNewPoints + POINTS_PER_QUESTION
+                          const totalPoints = updatedPoints + iKnewItPoints
+                          if (totalPoints === simpleQuestions.length * POINTS_PER_QUESTION) {
+                            winnerSound.play()
+                          } else {
+                            learnedNewSound.play()
+                          }
+
+                          setLearnedSomethingNewPoints(updatedPoints)
+                        }}
+                        className='ml-2 rounded-full bg-purple-600 hover:bg-purple-700'
+                      >
+                        Learned something new!
+                      </Button>
+                    )}
+                  </div>
+                  <div className='mb-4 flex items-center gap-2'>
+                    Knew it Score:
+                    {Score({
+                      points: iKnewItPoints,
+                      numQuestions: simpleQuestions.length,
+                    })}
+                    {shouldToggleIKnewItMap[questionIndex] ? (
+                      <Button
+                        onClick={() => {
+                          toggleIKnewItValueForIndex(questionIndex)
+                          setIKnewItPoints(iKnewItPoints - POINTS_PER_QUESTION)
+
+                          undoAddPointsSound.play()
+                        }}
+                        className='ml-2 rounded-full bg-red-500 hover:bg-red-700'
+                      >
+                        Undo
+                      </Button>
+                    ) : (
+                      <Button
+                        disabled={shouldToggleLearnedSomethingNewMap[questionIndex]}
+                        onClick={() => {
+                          toggleIKnewItValueForIndex(questionIndex)
+                          const updatedPoints = iKnewItPoints + POINTS_PER_QUESTION
+                          const totalPoints = updatedPoints + learnedSomethingNewPoints
+                          if (totalPoints === simpleQuestions.length * POINTS_PER_QUESTION) {
                             winnerSound.play()
                           } else {
                             addPointsSound.play()
                           }
 
-                          setTotalPoints(updatedPoints)
+                          setIKnewItPoints(updatedPoints)
                         }}
                         className='ml-2 rounded-full bg-purple-600 hover:bg-purple-700'
                       >
-                        Add {POINTS_PER_QUESTION}
+                        Knew It!
                       </Button>
                     )}
                   </div>
