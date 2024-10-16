@@ -80,6 +80,23 @@ const MainPage = () => {
   }
 
   useEffect(() => {
+    // Function to prevent default pinch-to-zoom gestures
+    const preventZoomGesture = (e) => e.preventDefault()
+
+    // Add gesture event listeners
+    document.addEventListener('gesturestart', preventZoomGesture)
+    document.addEventListener('gesturechange', preventZoomGesture)
+    document.addEventListener('gestureend', preventZoomGesture)
+
+    // Clean up the event listeners on unmount
+    return () => {
+      document.removeEventListener('gesturestart', preventZoomGesture)
+      document.removeEventListener('gesturechange', preventZoomGesture)
+      document.removeEventListener('gestureend', preventZoomGesture)
+    }
+  }, [])
+
+  useEffect(() => {
     const params = new URLSearchParams(location.search)
     const tab = params.get('tab') as TabValue | null
     if (tab) {

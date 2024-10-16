@@ -88,14 +88,17 @@ const SimpleQuestionAnswerView = ({ config }: { config: ISubjectConfig }) => {
     newAnswers[questionIndex] = +answerIndex
     setAnswers(newAnswers)
 
-    const nextCardRef = cardRefs.current[questionIndex + 1] // Get reference to the next card
-    if (nextCardRef) {
-      nextCardRef.scrollIntoView({
-        behavior: 'smooth', // Smooth scrolling
-        block: 'start', // Align the next card to the top
-      })
-      moveToNextSound.play()
-    }
+    handleSubmit(questionIndex)
+    moveToNextSound.play()
+
+    // const nextCardRef = cardRefs.current[questionIndex + 1] // Get reference to the next card
+    // if (nextCardRef) {
+    //   nextCardRef.scrollIntoView({
+    //     behavior: 'smooth', // Smooth scrolling
+    //     block: 'start', // Align the next card to the top
+    //   })
+    //   moveToNextSound.play()
+    // }
   }
 
   const handleSubmit = (questionIndex: number) => {
