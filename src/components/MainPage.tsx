@@ -81,7 +81,7 @@ const MainPage = () => {
 
   useEffect(() => {
     // Function to prevent default pinch-to-zoom gestures
-    const preventZoomGesture = (e) => e.preventDefault()
+    const preventZoomGesture = (e: Event) => e.preventDefault()
 
     // Add gesture event listeners
     document.addEventListener('gesturestart', preventZoomGesture)
